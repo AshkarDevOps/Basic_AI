@@ -1,0 +1,10 @@
+{
+    "pythonVersion": "3.11",
+    "venvPath": ".",
+    "extraPaths": [
+        "."
+    ],
+    "exclude": [
+        "**/__pycache__"
+    ]
+}

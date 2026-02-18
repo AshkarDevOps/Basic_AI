@@ -1,0 +1,17 @@
+# Core Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+
+# Database
+sqlalchemy==2.0.36
+
+# Data Processing
+pandas>=2.2.0
+numpy>=2.0.0
+
+# Trading Data - Use latest available version
+tradingview-screener>=3.0.0
+
+# Development
+python-multipart==0.0.20
