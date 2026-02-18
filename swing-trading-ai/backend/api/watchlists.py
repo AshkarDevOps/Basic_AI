@@ -19,6 +19,7 @@ router = APIRouter(prefix="/api/watchlists", tags=["watchlists"])
 class WatchlistCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100, description="Watchlist name")
     description: Optional[str] = Field(None, description="Watchlist description")
+    stock_ids: Optional[List[int]] = Field(None, description="List of stock IDs to add")  # ADDED
 
 
 class WatchlistUpdate(BaseModel):
@@ -111,7 +112,14 @@ async def create_watchlist(
     db: Session = Depends(get_db)
 ):
     """
-    Create a new watchlist
+    Create a new watchlist with optional stocks
+    
+    Request body:
+    {
+        "name": "My Watchlist",
+        "description": "Optional description",
+        "stock_ids": [1, 2, 3]  // Optional list of stock IDs to add
+    }
     """
     # Check if watchlist with same name exists
     existing = db.query(Watchlist).filter(Watchlist.name == watchlist.name).first()
@@ -131,6 +139,19 @@ async def create_watchlist(
     )
     
     db.add(new_watchlist)
+    db.flush()  # CHANGED: Flush to get ID before adding stocks
+    
+    # ADDED: Add stocks if provided
+    if watchlist.stock_ids:
+        added_stocks = []
+        for stock_id in watchlist.stock_ids:
+            stock = db.query(Stock).filter(Stock.id == stock_id).first()
+            if stock and stock not in new_watchlist.stocks:
+                new_watchlist.stocks.append(stock)
+                added_stocks.append(stock.symbol)
+        
+        print(f"✅ Added {len(added_stocks)} stocks to '{watchlist.name}': {added_stocks}")
+    
     db.commit()
     db.refresh(new_watchlist)
     

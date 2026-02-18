@@ -28,7 +28,13 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/stocks/${id}`, {
       method: 'DELETE',
     });
-    return response.json();
+
+    if (!response.ok) {
+      throw new Error('Failed to delete stock');
+    }
+
+    // 204 No Content - no body to parse
+    return;
   },
 
   // Watchlists
@@ -59,7 +65,13 @@ export const api = {
     const response = await fetch(`${API_BASE_URL}/api/watchlists/${id}`, {
       method: 'DELETE',
     });
-    return response.json();
+
+    if (!response.ok) {
+      throw new Error('Failed to delete watchlist');
+    }
+
+    // 204 No Content - no body to parse
+    return;
   },
 
   async addStocksToWatchlist(watchlistId: number, stockIds: number[]) {
@@ -69,6 +81,19 @@ export const api = {
       body: JSON.stringify({ stock_ids: stockIds }),
     });
     return response.json();
+  },
+
+  async removeStockFromWatchlist(watchlistId: number, stockId: number) {
+    const response = await fetch(`${API_BASE_URL}/api/watchlists/${watchlistId}/stocks/${stockId}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to remove stock from watchlist');
+    }
+
+    // 204 No Content - no body to parse
+    return;
   },
 
   // Strategies

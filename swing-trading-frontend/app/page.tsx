@@ -2,13 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import { Layout, Menu, message, Tag } from 'antd';
-import { DashboardOutlined, StockOutlined, UnorderedListOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import {
+  DashboardOutlined,
+  StockOutlined,
+  UnorderedListOutlined,
+  ThunderboltOutlined,
+  FileTextOutlined  // NEW!
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 
 import Dashboard from './components/Dashboard';
 import Stocks from './components/Stocks';
 import Watchlists from './components/Watchlists';
 import Strategies from './components/Strategies';
+import NewsAnalysis from './components/NewsAnalysis';  // NEW!
 import { api } from './lib/api';
 
 const { Header, Sider, Content } = Layout;
@@ -25,6 +32,7 @@ export default function Home() {
     { key: 'stocks', icon: <StockOutlined />, label: 'Stocks' },
     { key: 'watchlists', icon: <UnorderedListOutlined />, label: 'Watchlists' },
     { key: 'strategies', icon: <ThunderboltOutlined />, label: 'Strategies' },
+    { key: 'news', icon: <FileTextOutlined />, label: 'News Analysis' },  // NEW!
   ];
 
   useEffect(() => {
@@ -39,7 +47,7 @@ export default function Home() {
         api.getWatchlists(),
         api.getStrategies(),
       ]);
-      
+
       setStats(statsData);
       setStocks(stocksData);
       setWatchlists(watchlistsData);
@@ -134,12 +142,12 @@ export default function Home() {
         <div style={{ color: '#1890ff', padding: 20, fontSize: 22, fontWeight: 'bold', textAlign: 'center' }}>
           📈 Trading AI
         </div>
-        <Menu 
-          theme="dark" 
-          selectedKeys={[page]} 
-          onClick={({key}) => setPage(key)} 
-          mode="inline" 
-          items={menuItems} 
+        <Menu
+          theme="dark"
+          selectedKeys={[page]}
+          onClick={({ key }) => setPage(key)}
+          mode="inline"
+          items={menuItems}
         />
       </Sider>
 
@@ -153,16 +161,16 @@ export default function Home() {
           {page === 'dashboard' && (
             <Dashboard stats={stats} onRefresh={fetchAll} />
           )}
-          
+
           {page === 'stocks' && (
-            <Stocks 
-              stocks={stocks} 
+            <Stocks
+              stocks={stocks}
               onRefresh={fetchAll}
               onAddStock={handleAddStock}
               onDeleteStock={handleDeleteStock}
             />
           )}
-          
+
           {page === 'watchlists' && (
             <Watchlists
               watchlists={watchlists}
@@ -174,12 +182,21 @@ export default function Home() {
               onManageStocks={handleManageStocks}
             />
           )}
-          
+
           {page === 'strategies' && (
             <Strategies
               strategies={strategies}
               watchlists={watchlists}
               onExecuteStrategies={handleExecuteStrategies}
+              onRefresh={fetchAll}
+            />
+          )}
+
+          {/* NEW: News Analysis Page */}
+          {page === 'news' && (
+            <NewsAnalysis
+              watchlists={watchlists}
+              onRefresh={fetchAll}
             />
           )}
         </Content>
