@@ -1,0 +1,9 @@
+{
+    "pythonVersion": "3.11",
+    "extraPaths": [
+        "./swing-trading-ai/backend"
+    ],
+    "exclude": [
+        "**/__pycache__"
+    ]
+}

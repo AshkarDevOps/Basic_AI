@@ -1,0 +1,7 @@
+{
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/backend",
+    "${workspaceFolder}/venv/lib/site-packages"
+  ],
+  "python.analysis.useImportHeuristic": true
+}
